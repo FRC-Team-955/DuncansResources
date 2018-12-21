@@ -12,7 +12,7 @@ SimpleSocketServer::SimpleSocketServer(int port) {
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     // Throw an exception if the socket could not be created
-    if (server_fd < 0) throw std::runtime_error("ERROR opening socket");
+    if (server_fd < 0) throw std::runtime_error("Could not open socket");
 
     // Clear the server addresss struct
     bzero((char *) &serv_addr, sizeof(serv_addr));
@@ -27,12 +27,12 @@ SimpleSocketServer::SimpleSocketServer(int port) {
     // Allow the socket to overwrite a previous socket on the same port
     int yes=1;
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
-        std::cerr << "Socket bind option error" << std::endl;
+        throw std::runtime_error("Socket bind option error");
     }
 
     // Bind the address to the socket
     if (bind(server_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-        std::cerr << "ERROR on binding" << std::endl;
+        throw std::runtime_error("Socket bind error");
     }
 
     // Begin listening on the socket
@@ -53,9 +53,7 @@ SimpleSocketServer::SimpleSocketServer(int port) {
 // calls when the socket is already open.
 bool SimpleSocketServer::keep_alive() {
     // If we already have an open socket, do nothing.
-    if (this->is_open()) {
-        return true;
-    }
+    if (is_open()) return true;
 
     // Attempt to handle a new client
     int new_fd = accept(server_fd, (struct sockaddr *) &cli_addr, &clilen);
@@ -64,7 +62,7 @@ bool SimpleSocketServer::keep_alive() {
     if (new_fd < 0) { 
         if (errno != EWOULDBLOCK) {
             // There has been a real error
-            throw std::runtime_error("on accept");
+            throw std::runtime_error("Socket accept error");
             return false;
         }
 
@@ -73,7 +71,9 @@ bool SimpleSocketServer::keep_alive() {
     } else {
         // A new client has connected! Assign the fd field of the base class, and set the socket to non-blocking.
         this->fd = new_fd;
-        set_socket_nonblock(this->fd);
+        if (!set_socket_nonblock(this->fd)) {
+            throw std::runtime_error("Could not set socket to non-blocking");
+        }
         return true;
     }
 }

@@ -12,16 +12,19 @@
 #include <fcntl.h>
 
 class SimpleSocket {
+    friend class SimpleSocketServer;
+    friend class SimpleSocketClient;
     public:
 		int fd = -1; 
         int port;
 		struct sockaddr_in serv_addr;
         ssize_t read(void* data, size_t n_bytes);
         ssize_t write(void* data, size_t n_bytes);
-        bool is_open();
-        void close();
+        virtual bool keep_alive() = 0;
         ~SimpleSocket();
     private:
+        bool is_open();
+        void close();
         ssize_t close_if_error(ssize_t ret);
 };
 

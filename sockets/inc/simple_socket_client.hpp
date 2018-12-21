@@ -5,8 +5,12 @@
 
 class SimpleSocketClient : public SimpleSocket {
 	private:
-		struct hostent *server_host;
+		struct hostent *server_host = nullptr;
+        std::string ip;
 	public:
-		SimpleSocketClient (int port, char* ip);
-		~SimpleSocketClient();
+		SimpleSocketClient (std::string ip, int port);
+        int tmp_fd = -1;
+        void reset();
+        bool keep_alive();
+        ~SimpleSocketClient();
 };
