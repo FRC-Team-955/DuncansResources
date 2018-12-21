@@ -7,8 +7,7 @@ int main (int argc, char** argv) {
     SimpleSocket* sock;
     if (argc > 1) {
         sock = new SimpleSocketClient ("localhost", 5060);
-        sock->keep_alive();
-        sock->write((void*)"what", 5);
+        if (sock->keep_alive()) sock->write((void*)"what", 5);
     } else {
         sock = new SimpleSocketServer (5060);
     }

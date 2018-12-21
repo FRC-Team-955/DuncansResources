@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <simple_socket.hpp>
 
 class SimpleSocketClient : public SimpleSocket {

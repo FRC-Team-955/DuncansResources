@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdexcept>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -12,8 +13,10 @@
 #include <fcntl.h>
 
 class SimpleSocket {
+    // Allow derived classes to access private members
     friend class SimpleSocketServer;
     friend class SimpleSocketClient;
+
     public:
 		int fd = -1; 
         int port;

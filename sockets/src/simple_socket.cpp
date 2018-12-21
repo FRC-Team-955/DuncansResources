@@ -23,30 +23,43 @@ ssize_t SimpleSocket::write(void* data, size_t n_bytes) {
 }
 
 // Decide what to do, given a socket return value
-ssize_t SimpleSocket::close_if_error(ssize_t ret) {
-    // Check status of file desciptor
-    if (ret <= 0) {
+ssize_t SimpleSocket::close_if_error(ssize_t socket_return_value) {
 
-        // If read() or write() return 0 or -1, check to make sure that the socket has not closed
-        if (errno == EWOULDBLOCK) {
-            // The socket is fine, it just hasn't received anything yet.
-            return 0;
-        } else {
+    // 'End of file'. Peer hungup, close safely.
+    if (socket_return_value == 0) close();
 
-            // The socket has experienced an error, close it safely.
-            close();
-            return 0;
+    // If there's a socket error, handle it
+    if (socket_return_value < 0) {
+
+        // If errno = EWOULDBLOCK, the socket is fine, it just hasn't received 
+        // anything yet. Otherwise, close the socket down.
+        switch (errno) {
+            case EWOULDBLOCK: // Not an error, just nothing happened.
+                break; 
+            case ECONNREFUSED: // Connection was refused
+            case ECONNRESET: // Connection was reset
+                close();
+                break;
+            default: //Unhandled, real error.
+                close();
+                throw std::runtime_error(strerror(errno));
+                break;
         }
-    }
 
-    // Return the number of bytes that were manipulated.
-    return ret;
+        // Can be used like a boolean value, to indicate failure.
+        return 0;
+    } else {
+        // Everything's fine, return the number of bytes that were manipulated.
+        return socket_return_value;
+    }
 }
 
 // Close the socket, and set it's file descriptor variable to -1 to indicate that it has closed.
 void SimpleSocket::close() {
-    ::close(fd);
-    fd = -1;
+    if (is_open()) {
+        ::close(fd);
+        fd = -1;
+    }
 }
 
 // Check to see whether the socket is still open
