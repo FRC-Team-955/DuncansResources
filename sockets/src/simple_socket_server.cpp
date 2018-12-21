@@ -55,14 +55,15 @@ bool SimpleSocketServer::keep_alive() {
     // If we already have an open socket, do nothing.
     if (is_open()) return true;
 
-    // Attempt to handle a new client
-    int new_fd = accept(server_fd, (struct sockaddr *) &cli_addr, &clilen);
+    // Attempt to handle a new client, and store the file descriptor 
+    // in a temporary location
+    int tmp_fd = accept(server_fd, (struct sockaddr *) &cli_addr, &clilen);
 
     // Determine whether there has been an error
-    if (new_fd < 0) { 
+    if (tmp_fd < 0) { 
         if (errno != EWOULDBLOCK) {
-            // There has been a real error
-            throw std::runtime_error("Socket accept error");
+            // There has been a real error, halt and report.
+            throw std::runtime_error(strerror(errno));
             return false;
         }
 
@@ -70,10 +71,12 @@ bool SimpleSocketServer::keep_alive() {
         return false;
     } else {
         // A new client has connected! Assign the fd field of the base class, and set the socket to non-blocking.
-        this->fd = new_fd;
+        this->fd = tmp_fd;
         if (!set_socket_nonblock(this->fd)) {
             throw std::runtime_error("Could not set socket to non-blocking");
         }
+
+        // Green across the board. We now have a working socket. Hopefully.
         return true;
     }
 }

@@ -1,6 +1,8 @@
 #include <simple_socket_client.hpp>
 
+// Construct a new simple socket client at ip and port.
 SimpleSocketClient::SimpleSocketClient(std::string ip, int port) {
+    // Assign internals
     this->port = port;
     this->ip = ip;
 
@@ -67,7 +69,7 @@ bool SimpleSocketClient::keep_alive() {
             return false;
         } else {
             // Assign the real file descriptor, which opens the connection for use!
-            fd = tmp_fd;
+            this->fd = tmp_fd;
 
             // Invalidate the temporary fd, we don't need it anymore.
             tmp_fd = -1;
