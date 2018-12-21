@@ -12,6 +12,8 @@
 #include <errno.h> // C api error handling
 #include <fcntl.h> // Flags/non-blocking
 
+// A simple socket, base class for client and server objects to inherit from. 
+// Represents a socket that can be written to and read from.
 class SimpleSocket {
     // Allow derived classes to access private members
     friend class SimpleSocketServer;
@@ -31,6 +33,8 @@ class SimpleSocket {
         // Keep the derived class alive. In order to maintain an option connection, 
         // this should be called regularly. Returns whether the socket is actually /
         // alive or not, after attempting to reconnect if there has been an error.
+        // Note that this is a virtual function, and has no generic implementation.
+        // Derived classes are required to implement this function.
         virtual bool keep_alive() = 0;
 
         // Base clase destructor. Called when derived classes are destructed.

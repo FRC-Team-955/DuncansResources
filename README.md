@@ -1,6 +1,6 @@
 # Robotics examples
 
-To compile and these examples, cd into their directory and execute the following commands:
+To compile and run these examples, cd into their directory and execute the following commands:
 
 ```
 cd <project directory>
@@ -18,3 +18,6 @@ make -j
 # Run the executable
 ./<executable name>
 ```
+
+If you've got more questions, you can email Duncan at:
+duncan.freeman1@gmail.com
