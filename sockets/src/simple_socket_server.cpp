@@ -44,7 +44,7 @@ SimpleSocketServer::SimpleSocketServer(int port) {
     // Do not block when checking for a new client 
     set_socket_nonblock(server_fd);
 
-    // Attempt to look for a client immediately.
+    // Attempt to find and connect to a client immediately.
     keep_alive();
 }
 

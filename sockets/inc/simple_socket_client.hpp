@@ -3,13 +3,24 @@
 #include <simple_socket.hpp>
 
 class SimpleSocketClient : public SimpleSocket {
-	private:
-		struct hostent *server_host = nullptr;
-        std::string ip;
 	public:
+        // Constructor
 		SimpleSocketClient (std::string ip, int port);
-        int tmp_fd = -1;
-        void reset();
-        bool keep_alive();
+
+        // Destructor
         ~SimpleSocketClient();
+
+        // Temporary file descriptor. Used to hide an in-progress connection
+        // from the base class. Isn't connected to anything yet. Invalid when -1.
+        int tmp_fd = -1;
+
+        // See simple_socket.*pp
+        bool keep_alive();
+
+	private:
+        // Information about a remote host (server)
+		struct hostent *server_host = nullptr;
+
+        // Store the ip so we can reconnect later
+        std::string ip;
 };

@@ -19,7 +19,6 @@ ssize_t SimpleSocket::write(void* data, size_t n_bytes) {
     // Read from the file descriptor
     // Return value from read; contains either number of bytes read, or error.
     return close_if_error(::write(fd, data, n_bytes));
-
 }
 
 // Decide what to do, given a socket return value
@@ -54,7 +53,8 @@ ssize_t SimpleSocket::close_if_error(ssize_t socket_return_value) {
     }
 }
 
-// Close the socket, and set it's file descriptor variable to -1 to indicate that it has closed.
+// Close the socket, and set it's file descriptor variable to -1 to indicate that it 
+// has closed.
 void SimpleSocket::close() {
     if (is_open()) {
         ::close(fd);
