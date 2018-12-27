@@ -5,7 +5,7 @@ SET( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0 FATAL_ERROR)
 
 # Declare project name
-PROJECT(socket_server_example)
+PROJECT(socket_example)
 
 # Create a variable called SOURCES that contains a list of all source files. 
 # In this case, they're all in src/ and all end in '.cpp', so we use the 
@@ -24,8 +24,8 @@ INCLUDE_DIRECTORIES("./inc")
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 
 # Compile an executable from all of the files from the SOURCES variable and
-# name it 'socket_server_example'
-ADD_EXECUTABLE(socket_server_example ${SOURCES})
+# name it 'socket_example'
+ADD_EXECUTABLE(socket_example ${SOURCES})
 
 # Link the executable with... nothing. For now.
-TARGET_LINK_LIBRARIES(socket_server_example)
+TARGET_LINK_LIBRARIES(socket_example)

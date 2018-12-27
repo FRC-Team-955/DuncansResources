@@ -36,17 +36,18 @@ int main (int argc, char** argv) {
         // number of bytes read or written if not zero.
         ssize_t ret = 0;
 
-        // Check if the socket is alive and read up to 512 bytes into the message buffer
+        // Check if the socket is alive, and if so, read up to 512 bytes into the message buffer
         if (alive && (ret = sock->read(buffer, message_buffer_size))) {
             // If there was anything received...
 
             // Print the message buffer contents
             printf("Message: %s\n", buffer);
 
-            // Write the message buffer contents into the socket, using 
+            // Write the message buffer contents into the socket, reusing the length of the 
+            // read message as the length for the write message
             sock->write(buffer, ret);
 
-            // Clear the buffer to await new messages
+            // Clear (zero) the buffer to await new messages
             bzero(buffer, 512);
         } else {
             // Nothing was received. Sleep so we don't spam the kernel.
