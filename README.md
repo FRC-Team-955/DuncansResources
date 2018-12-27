@@ -3,9 +3,9 @@
 The repository is divided into a directories/files that cover certain subjects. 
 They are as follows:
 
-* `sockets/` - A simple socket library and executable example
+* `sockets/` - A simple async socket library and executable example
 * `opengl/` - Examples of graphics manipulation
-* `jetson_internet` - A document demonstrating internet access to a remote device
+* `jetson_internet.md` - A document demonstrating internet access to a remote device
 
 # Compiling
 To compile and run these examples, execute the following commands:

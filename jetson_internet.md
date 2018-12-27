@@ -11,7 +11,7 @@ SSHuttle will need to be installed on the Jetson, and the laptop will need inter
 # Start the SSH Daemon
 sudo systemctl start sshd
 
-# Note the laptop's ethernet IP address. When connected to the robot, it should be something like 10.9.55.3
+# Note the laptop's ethernet IP address. When connected to the robot, it should be something like [laptop ip]
 ifconfig
 ```
 
@@ -19,7 +19,7 @@ ifconfig
 ```
 # Use SSHuttle to connect to the laptop and begin forwarding packets.
 # Note that you can also pass '-f' if you want this to run in the background.
-sshuttle --dns -r user@10.9.55.3 -x10.9.55.3 0/0
+sshuttle --dns -r user@[laptop ip] -x[laptop ip] 0/0
 ```
 
 ## Installing SSHuttle
@@ -33,16 +33,16 @@ sudo apt install sshuttle
 If the router has been configured for FMS (I.E. you are at a competition), you may have to use approved ports. You will need to set your SSH server and sshuttle to use an approved range. 
 Refer to https://wpilib.screenstepslive.com/s/currentCS/m/troubleshooting/l/705152-fms-whitepaper to determine which ports are allowed.
 
-You should configure your laptop's SSH server to use port 5810 (or something)
+You should configure your laptop's SSH server to use an approved port:
 ```
 # /etc/ssh/sshd_config
 ...
-Port 5810 # Or something
+Port [ssh port]
 ...
 ```
 And ask SSHuttle to connect on that port
 ```
-sshuttle --dns -r user@10.9.55.3:5810 -x10.9.55.3 0/0
+sshuttle --dns -r user@[laptop ip]:[ssh port] -x[laptop ip] 0/0
 ```
 
 If that doesn't work, don't panic. Find another team that can help. The ones that have vision systems/raspberry pis are usually the best.
