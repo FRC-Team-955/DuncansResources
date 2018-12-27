@@ -1,0 +1,3 @@
+[submodule "paths_from_scratch"]
+	path = paths_from_scratch
+	url = https://github.com/FRC-Team-955/paths_from_scratch.git
