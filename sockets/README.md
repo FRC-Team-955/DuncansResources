@@ -25,7 +25,7 @@ See `src/main.cpp` for a simple example of using the sockets. Note how I use the
 ## Limitations
 The library is intended only to be used for asynchronous sockets. This means that in order to use the library, you have to call `sock.keep_alive()` frequently to maintain contact. You will have to build the flow of your program around this limitation. This is a marginal improvement upon the default alternative - blocking sockets - which halt your program while the socket is waiting to send or receive a message. 
 
-Furthermore, the socket server class only allows one client to connect at any given time. To handle more than one client, you would need to create more server socket classes with unique ports. This is not even close to ideal. If you want to try to handle multiple clients, look into `poll(2)`, `epoll(7)`, or `select(3)`. My favorite is `poll(2)` for it's simplicity and ease or use. Take a look in 'more guides' for more information.
+Furthermore, the socket server class only allows one client to connect at any given time. To handle more than one client, you would need to create more server socket classes with unique ports. This is not even close to ideal. If you want to try to handle multiple clients, look into `poll(2)`, `epoll(7)`, or `select(3)`. My favorite is `poll(2)` for it's simplicity and ease of use. Take a look at 'more guides'. 
 
 If the socket is still closed and you try to `write()` or `read()` it, it may throw an exception. Try to make sure the socket is alive (`.keep_alive()`) before a communication burst.
 

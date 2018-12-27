@@ -1,6 +1,14 @@
 # Robotics examples
 
-To compile and run these examples, cd into their directory and execute the following commands:
+The repository is divided into a directories/files that cover certain subjects. 
+They are as follows:
+
+* `sockets/` - A simple socket library and executable example
+* `opengl/` - Examples of graphics manipulation
+* `jetson_internet` - A document demonstrating internet access to a remote device
+
+# Compiling
+To compile and run these examples, execute the following commands:
 
 ```
 cd <project directory>
@@ -13,6 +21,7 @@ cd build
 cmake ..
 
 # Execute the make command to compile the source using the build files
+# Note, '-j' enables make to compile using multiple threads. On large projects, this is extremely helpful.
 make -j
 
 # Run the executable
