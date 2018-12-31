@@ -5,7 +5,8 @@ They are as follows:
 
 * `sockets/` - A simple async socket library and executable example
 * `opengl/` - Examples of graphics manipulation
-* `jetson_internet.md` - A document demonstrating internet access to a remote device
+* `path_from_scratch/` - Documentation on how to use bezier curves for robot path planning (PDF)
+* `jetson_internet.md` - A document demonstrating how to provide internet access to a remote device
 
 # Compiling
 To compile and run these examples, execute the following commands:

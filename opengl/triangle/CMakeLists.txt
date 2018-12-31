@@ -5,7 +5,7 @@ SET( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0 FATAL_ERROR)
 
 # Declare project name
-PROJECT(opengl_example)
+PROJECT(triangle)
 
 # Create a variable called SOURCES that contains a list of all source files. 
 # In this case, they're all in src/ and all end in '.cpp', so we use the 
@@ -40,8 +40,8 @@ include_directories(${OPENGL_INCLUDE_DIRS})
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 
 # Compile an executable from all of the files from the SOURCES variable and
-# name it 'opengl_example'
-ADD_EXECUTABLE(opengl_example ${SOURCES})
+# name it 'triangle'
+ADD_EXECUTABLE(triangle ${SOURCES})
 
 # Link the executable with... nothing. For now.
-TARGET_LINK_LIBRARIES(opengl_example ${GLEW_LIBRARIES} ${GLFW_LIBRARIES} ${GLM_LIBRARIES} ${OPENGL_LIBRARIES})
+TARGET_LINK_LIBRARIES(triangle ${GLEW_LIBRARIES} ${GLFW_LIBRARIES} ${GLM_LIBRARIES} ${OPENGL_LIBRARIES})
