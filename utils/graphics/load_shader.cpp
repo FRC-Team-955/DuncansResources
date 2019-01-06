@@ -49,7 +49,7 @@ void print_shader_log(GLuint shader_handle, GLenum status_type) {
 
 // Load a single shader from a file
 GLuint load_shader(const char* path, GLenum shader_type) {
-    // Read vertex shader file
+    // Read source
     size_t source_file_size;
     char* source = read_all(path, &source_file_size);
 
@@ -94,7 +94,7 @@ GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path
     glDetachShader(program_handle, vertex_handle);
     glDetachShader(program_handle, fragment_handle);
 
-    // Delete handles
+    // Delete shader handles
     glDeleteShader(vertex_handle);
     glDeleteShader(fragment_handle);
 

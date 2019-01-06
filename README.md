@@ -1,6 +1,4 @@
-# Robotics examples
-
-The repository is divided into 3 directories as follows:
+# Resources
 
 * `utils/` - Short, concise, and well documented code snippets
 * `demos/` - Demonstrations and example programs utilizing the code from `utils/`
