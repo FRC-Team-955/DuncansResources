@@ -46,6 +46,3 @@ sshuttle --dns -r user@[laptop ip]:[ssh port] -x[laptop ip] 0/0
 ```
 
 If that doesn't work, don't panic. Find another team that can help. The ones that have vision systems/raspberry pis are usually the best.
-
-
-(((or contact me)))
