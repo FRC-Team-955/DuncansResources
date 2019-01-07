@@ -5,6 +5,7 @@ namespace TinyVec {
     struct Vec2 {
         public:
             float x, y;
+            Vec2();
             Vec2(float x, float y);
             Vec2(float k);
             Vec2 operator+(Vec2 other);

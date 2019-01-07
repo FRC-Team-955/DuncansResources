@@ -6,8 +6,9 @@
 #include <vec2.hpp>
 #include <vector>
 #include <line_renderer.hpp>
+#include <spline.hpp>
 
-using namespace glm;
+//using namespace glm;
 
 // GLFW error callback (function). Prints messages from GLFW
 void glfw_error_callback(int error, const char *description) {
@@ -27,15 +28,52 @@ float random_bi_float() {
     return 2.0 * random_uniform_float() - 1.0;
 }
 
+GLFWwindow* boilerplate();
 
 int main() {
-    // Boilerplate setup for the window and such
+    GLFWwindow* window = boilerplate();
 
+    TinyVec::Vec2 a(0.0, 0.0);
+    TinyVec::Vec2 b(0.9, -0.6);
+    TinyVec::Vec2 c(-0.8, 0.6);
+    TinyVec::Vec2 d(-0.6, -0.7);
+
+    LineRenderer lines;
+
+    // Main loop
+    float increment = 0.0;
+    while (!glfwWindowShouldClose(window)) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLineWidth(3);
+        
+        increment += 0.01;
+        b.x = cos(increment);
+        b.y = sin(increment);
+
+        lines.clear();
+        TinyVec::Vec2 last;
+        for (float i = 0.0; i < 1.0; i += 0.01) {
+            TinyVec::Vec2 current = spline(a, b, c, d, i); 
+            lines.push({ last, current, i, 1.0f - i, i });
+            last = current;
+        }
+        lines.commit();
+
+        lines.draw();
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    // Free the window
+    glfwDestroyWindow(window);
+}
+
+GLFWwindow* boilerplate() {
     // Try to initialize GLFW
     if (!glfwInit()) {
         // Initialization failed. Message and shut down.
         fprintf(stderr, "GLFW Failed to initialize.\n");
-        return EXIT_FAILURE;
+        exit(EXIT_FAILURE);
     }
 
     // Set an error message callback for GLFW
@@ -52,7 +90,7 @@ int main() {
         // Window or OpenGL context creation failed
         fprintf(stderr, "GLFW Failed to create a window.\n");
         glfwTerminate();
-        return EXIT_FAILURE;
+        exit(EXIT_FAILURE);
     }
 
     // Set the OpenGL context to the window
@@ -63,27 +101,8 @@ int main() {
     // Initialize GLEW
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
-        return EXIT_FAILURE;
-    }
-    glLineWidth(3);
-
-    LineRenderer lines_a;
-    lines_a.push({ TinyVec::Vec2 (0.0, 0.0), TinyVec::Vec2 (1.0, 0.0), 1.0, 0.0, 0.0 });
-    lines_a.commit();
-
-    LineRenderer lines_b;
-    lines_b.push({ TinyVec::Vec2 (0.0, 0.0), TinyVec::Vec2 (0.0, 1.0), 0.0, 1.0, 0.0 });
-    lines_b.commit();
-
-    // Main loop
-    while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        lines_a.draw();
-        lines_b.draw();
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        exit(EXIT_FAILURE);
     }
 
-    // Free the window
-    glfwDestroyWindow(window);
+    return window;
 }
