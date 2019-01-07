@@ -5,22 +5,28 @@
 #include <vec2.hpp>
 #include <vector>
 
-struct GraphicLine {
-    TinyVec::Vec2 start;
-    TinyVec::Vec2 end;
+struct GraphicPoint {
+    TinyVec::Vec2 position;
     float r, g, b;
 };
 
-class LineRenderer {
+struct GraphicLine {
+    GraphicPoint start;
+    GraphicPoint end;
+};
+
+class PrimitiveRenderer {
     public:
-        LineRenderer();
+        PrimitiveRenderer(GLenum draw_type);
         void clear();
         void push(GraphicLine line);
+        void push(GraphicPoint point);
         void commit();
         void draw();
-        ~LineRenderer();
+        ~PrimitiveRenderer();
 
     private:
+        GLenum draw_type;
         size_t elements_stored = 0;
         size_t count_elements();
         GLuint shader_program;

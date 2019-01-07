@@ -27,8 +27,8 @@ FIND_PACKAGE(GLEW REQUIRED)
 include_directories(${GLEW_INCLUDE_DIRS})
 
 # Find the GLM package and add include it's headers
-FIND_PACKAGE(glm REQUIRED)
-include_directories(${GLM_INCLUDE_DIRS})
+#FIND_PACKAGE(glm REQUIRED)
+#include_directories(${GLM_INCLUDE_DIRS})
 
 FIND_PACKAGE(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
@@ -44,4 +44,5 @@ SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
 ADD_EXECUTABLE(spline_viewer ${SOURCES})
 
 # Link the executable with... nothing. For now.
-TARGET_LINK_LIBRARIES(spline_viewer ${GLEW_LIBRARIES} ${GLFW_LIBRARIES} ${GLM_LIBRARIES} ${OPENGL_LIBRARIES})
+#TARGET_LINK_LIBRARIES(spline_viewer ${GLEW_LIBRARIES} ${GLFW_LIBRARIES} ${GLM_LIBRARIES} ${OPENGL_LIBRARIES})
+TARGET_LINK_LIBRARIES(spline_viewer ${GLEW_LIBRARIES} ${GLFW_LIBRARIES} ${OPENGL_LIBRARIES})
