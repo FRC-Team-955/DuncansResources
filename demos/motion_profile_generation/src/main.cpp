@@ -23,6 +23,4 @@ int main()
                 output.motion.velocity_left,
                 output.motion.velocity_right);
     }
-
-    printf("Test UwU\n");
 }
