@@ -1,5 +1,7 @@
 #include <load_shader.hpp>
 
+//TODO: Add geometry shader support, char* shader_source = nullptr (optional)
+
 // Read the contents of a file into a string. You must free the memory pointed to
 // the return value after you are finished with it.
 char* read_all(const char* path, size_t* file_size) {
@@ -48,10 +50,7 @@ void print_shader_log(GLuint shader_handle, GLenum status_type) {
 }
 
 // Load a single shader from a file
-GLuint load_shader(const char* path, GLenum shader_type) {
-    // Read source
-    size_t source_file_size;
-    char* source = read_all(path, &source_file_size);
+GLuint load_shader(char* source, size_t source_file_size, GLenum shader_type) {
 
     // Create the handle
     GLuint shader_handle = glCreateShader(shader_type);
@@ -66,17 +65,23 @@ GLuint load_shader(const char* path, GLenum shader_type) {
     // Check
     print_shader_log(shader_handle, GL_COMPILE_STATUS);
 
-    // Free the memory we allocated for the source file
-    free(source);
-
     return shader_handle;
 }
 
-// Load and link a program from shader files
-GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path) {
-    GLuint vertex_handle = load_shader(vertex_file_path, GL_VERTEX_SHADER);
-    GLuint fragment_handle = load_shader(fragment_file_path, GL_FRAGMENT_SHADER);
+GLuint load_shader_file(char* path, GLenum shader_type) {
+    // Read source
+    size_t source_file_size;
+    char* source = read_all(path, &source_file_size);
+    
+    // Compile shader
+    GLuint shader_handle = load_shader(source, source_file_size, shader_type);
 
+    // Free the memory we allocated for the source file
+    free(source);
+    return shader_handle;
+}
+
+GLuint link_shaders(GLuint vertex_handle, GLuint fragment_handle) {
     // Create program handle
     GLuint program_handle = glCreateProgram();
 
@@ -99,4 +104,18 @@ GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path
     glDeleteShader(fragment_handle);
 
     return program_handle;
+}
+
+// Load and link a program from shader files
+GLuint load_shaders(char *vertex_file_path, char *fragment_file_path) {
+    GLuint vertex_handle = load_shader_file(vertex_file_path, GL_VERTEX_SHADER);
+    GLuint fragment_handle = load_shader_file(fragment_file_path, GL_FRAGMENT_SHADER);
+    return link_shaders(vertex_handle, fragment_handle);
+}
+
+// Load and link a program from baked-in strings or other sources 
+GLuint load_shaders_local(char *vertex_source, char *fragment_source) {
+    GLuint vertex_handle = load_shader(vertex_source, strlen(vertex_source), GL_VERTEX_SHADER);
+    GLuint fragment_handle = load_shader(fragment_source, strlen(fragment_source), GL_FRAGMENT_SHADER);
+    return link_shaders(vertex_handle, fragment_handle);
 }

@@ -11,4 +11,5 @@
 #include <string.h>
 #include <errno.h>
 
-GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path);
+GLuint load_shaders(char *vertex_file_path, char *fragment_file_path);
+GLuint load_shaders_local(char *vertex_source, char *fragment_source);

@@ -7,8 +7,6 @@
 
 using namespace glm;
 
-GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path);
-
 // GLFW error callback (function). Prints messages from GLFW
 void glfw_error_callback(int error, const char *description) {
     fprintf(stderr, "GLFW Error: %s\n", description);

@@ -3,16 +3,30 @@
 #include <glm/glm.hpp>
 #include <stdio.h>
 #include <stdlib.h>
-#include <load_shader.hpp>
+#include <vec2.hpp>
+#include <vector>
+#include <line_renderer.hpp>
 
 using namespace glm;
-
-GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path);
 
 // GLFW error callback (function). Prints messages from GLFW
 void glfw_error_callback(int error, const char *description) {
     fprintf(stderr, "GLFW Error: %s\n", description);
 }
+
+void glfw_window_resize_callback(GLFWwindow* window, int width, int height) {
+    int min = std::min(width, height);
+    glViewport(0, 0, (GLsizei)min, (GLsizei)min);
+}
+
+float random_uniform_float() {
+    return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+}
+
+float random_bi_float() {
+    return 2.0 * random_uniform_float() - 1.0;
+}
+
 
 int main() {
     // Boilerplate setup for the window and such
@@ -33,7 +47,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
 
     // Create a window for OpenGL to draw upon
-    GLFWwindow *window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(640, 480, "Spline viewer", NULL, NULL);
     if (!window) {
         // Window or OpenGL context creation failed
         fprintf(stderr, "GLFW Failed to create a window.\n");
@@ -44,55 +58,28 @@ int main() {
     // Set the OpenGL context to the window
     glfwMakeContextCurrent(window);
 
+    glfwSetWindowSizeCallback(window, glfw_window_resize_callback);
+
     // Initialize GLEW
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         return EXIT_FAILURE;
     }
+    glLineWidth(3);
 
-    // OpenGL setup
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
+    LineRenderer lines_a;
+    lines_a.push({ TinyVec::Vec2 (0.0, 0.0), TinyVec::Vec2 (1.0, 0.0), 1.0, 0.0, 0.0 });
+    lines_a.commit();
 
-    // An array of 3 vectors which represents 3 vertices
-    static const GLfloat g_vertex_buffer_data[] = {
-        -1.0f, -1.0f, 0.0f, //
-        1.0f, -1.0f, 0.0f, //
-        0.0f, 1.0f, 0.0f, //
-    };
-
-    // This will identify our vertex buffer
-    GLuint vertexbuffer;
-    // Generate 1 buffer, put the resulting identifier in vertexbuffer
-    glGenBuffers(1, &vertexbuffer);
-    // The following commands will talk about our 'vertexbuffer' buffer
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    // Give our vertices to OpenGL.
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data),
-            g_vertex_buffer_data, GL_STATIC_DRAW);
-
-    GLuint program = load_shaders("../shaders/vertex.glsl", "../shaders/fragment.glsl");
+    LineRenderer lines_b;
+    lines_b.push({ TinyVec::Vec2 (0.0, 0.0), TinyVec::Vec2 (0.0, 1.0), 0.0, 1.0, 0.0 });
+    lines_b.commit();
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // 1st attribute buffer : vertices
-        glUseProgram(program);
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glVertexAttribPointer(0, // attribute 0. No particular reason for 0, but
-                // must match the layout in the shader.
-                3, // size
-                GL_FLOAT, // type
-                GL_FALSE, // normalized?
-                0,        // stride
-                (void *)0 // array buffer offset
-                );
-        // Draw the triangle !
-        glDrawArrays(GL_TRIANGLES, 0,
-                3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-        glDisableVertexAttribArray(0);
+        lines_a.draw();
+        lines_b.draw();
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
