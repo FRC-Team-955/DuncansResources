@@ -2,9 +2,9 @@
 
 using namespace TinyVec;
 
-Vec2::Vec2() : Vec2(0.0) {};
 Vec2::Vec2(float x, float y) : x(x), y(y){};
 Vec2::Vec2(float k) : x(k), y(k){};
+Vec2::Vec2() : Vec2(0.0) {};
 Vec2 Vec2::operator+(Vec2 other) { return Vec2(x + other.x, y + other.y); }
 Vec2 Vec2::operator-(Vec2 other) { return Vec2(x - other.x, y - other.y); }
 Vec2 Vec2::operator*(float scalar) { return Vec2(x * scalar, y * scalar); }

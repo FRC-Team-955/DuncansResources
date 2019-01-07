@@ -5,9 +5,9 @@ namespace TinyVec {
     struct Vec2 {
         public:
             float x, y;
-            Vec2();
             Vec2(float x, float y);
             Vec2(float k);
+            Vec2();
             Vec2 operator+(Vec2 other);
             Vec2 operator-(Vec2 other);
             Vec2 operator*(float scalar);
@@ -19,5 +19,4 @@ namespace TinyVec {
 
     Vec2 operator*(float lhs, Vec2 rhs);
     Vec2 operator+(float lhs, Vec2 rhs);
-    Vec2 lerp(Vec2 a, Vec2 b, float i);
 }
