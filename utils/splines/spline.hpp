@@ -1,6 +1,5 @@
 #pragma once
 #include <vec2.hpp>
-#include <parametric_output.hpp>
 
 using namespace TinyVec;
 

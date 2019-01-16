@@ -24,7 +24,7 @@ int main() {
     PrimitiveRenderer points(GL_POINTS);
     glPointSize(5); // Set the OpenGL points size to something we can see
 
-    // Line renderem, manages rendering of lines
+    // Line renderer, manages rendering of lines
     PrimitiveRenderer lines(GL_LINES);
     glLineWidth(2); // Sane line width
 
