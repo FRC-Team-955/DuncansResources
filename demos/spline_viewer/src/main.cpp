@@ -133,6 +133,7 @@ GLFWwindow* boilerplate() {
     glfwSetWindowSizeCallback(window, glfw_window_resize_callback);
 
     // Initialize GLEW
+    glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         exit(EXIT_FAILURE);
