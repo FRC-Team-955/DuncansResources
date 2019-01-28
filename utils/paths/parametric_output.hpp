@@ -3,6 +3,8 @@
 
 using namespace TinyVec;
 
+// Container for output of parametrically derived information, and a few
+// member functions to aid path generation
 struct ParametricOutput {
 	Vec2 position; //f(index)
 	Vec2 velocity; //f'(index)
