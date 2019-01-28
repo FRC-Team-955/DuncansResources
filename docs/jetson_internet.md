@@ -7,18 +7,20 @@ The best solution is to use the laptop SSH'd into the Jetson as a proxy server.
 SSHuttle will need to be installed on the Jetson, and the laptop will need internet access for this to work.
 
 ## On the laptop:
+Start the SSH Daemon:
 ```
-# Start the SSH Daemon
 sudo systemctl start sshd
+```
 
-# Note the laptop's ethernet IP address. When connected to the robot, it should be something like [laptop ip]
+Note the laptop's ethernet IP address. When connected to the robot, it should be something like 10.9.55.3:
+```
 ifconfig
 ```
 
 ## On the Jetson:
+Use SSHuttle to connect to the laptop and begin forwarding packets.
+(Note that you can also pass '-f' if you want this to run in the background):
 ```
-# Use SSHuttle to connect to the laptop and begin forwarding packets.
-# Note that you can also pass '-f' if you want this to run in the background.
 sshuttle --dns -r user@[laptop ip] -x[laptop ip] 0/0
 ```
 
@@ -34,8 +36,8 @@ If the router has been configured for FMS (I.E. you are at a competition), you m
 Refer to https://wpilib.screenstepslive.com/s/currentCS/m/troubleshooting/l/705152-fms-whitepaper to determine which ports are allowed.
 
 You should configure your laptop's SSH server to use an approved port:
+/etc/ssh/sshd\_config:
 ```
-# /etc/ssh/sshd_config
 ...
 Port [ssh port]
 ...

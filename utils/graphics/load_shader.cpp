@@ -6,7 +6,7 @@
 // the return value after you are finished with it.
 char* read_all(const char* path, size_t* file_size) {
 
-    // Open file pointer or throw exception
+    // Open file pointer or fail
     FILE* file_handle = fopen(path, "r");
     if (!file_handle) {
         fprintf(stderr, "Error when reading %s: %s\n", path, strerror(errno));

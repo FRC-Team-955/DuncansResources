@@ -1,6 +1,6 @@
 # Resources
 
-* `utils/` - Short, concise, and well documented code snippets
+* `utils/` - Code snippets useful for path planning
 * `demos/` - Demonstrations and example programs utilizing the code from `utils/`
 * `docs/` - Miscellaneous bits of info on robot programming or path planning
 
