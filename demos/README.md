@@ -7,6 +7,11 @@
 * `motion_profile_generation/` - Example of generating velocity data from a spline for tank drive motion
 * `strip_detection/` - A simple OpenCV application to detect a strip.
 
+# Installing libraries
+```
+sudo apt install libglew-dev libglfw3-dev
+```
+
 # Compiling
 To compile and run these examples, execute the following commands:
 
