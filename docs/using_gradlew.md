@@ -11,7 +11,7 @@ sudo apt install openjdk-8-jdk
 
 Get the example code zip off of the release page, and unzip it into a new directory:
 ```
-mkdir Projects/GradleTest
+mkdir -p Projects/GradleTest
 cd Projects/GradleTest
 wget https://github.com/wpilibsuite/GradleRIO/releases/download/v2019.2.1/cpp.zip
 unzip cpp.zip 
@@ -29,7 +29,8 @@ Allow GradleW to download and set itself up while building:
 Set the team number:
 ```
 $EDITOR .wpilib/wpilib_preferences.json
- --
+```
+```
 {
   "enableCppIntellisense": true,
   "currentLanguage": "cpp",
@@ -40,7 +41,6 @@ $EDITOR .wpilib/wpilib_preferences.json
 
 Make sure that gradlew can find the RIO:
 ```
-# Find the RIO
 ./gradlew discoverRoborio
 ```
 
