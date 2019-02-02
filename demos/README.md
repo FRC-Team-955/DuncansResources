@@ -9,8 +9,11 @@
 
 # Installing libraries
 ```
-sudo apt install libglew-dev libglfw3-dev
+sudo apt update
+sudo apt install cmake libglew-dev libglfw3-dev
 ```
+
+Optional: [Install OpenCV](https://docs.opencv.org/3.4/d7/d9f/tutorial_linux_install.html)
 
 # Compiling
 To compile and run these examples, execute the following commands:
