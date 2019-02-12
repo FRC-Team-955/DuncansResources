@@ -9,6 +9,7 @@ class RealSenseBGRDFrameSource : public BGRDFrameSource {
         RealSenseBGRDFrameSource(cv::Size size, int fps);
         BGRDFrame next();
         float get_depth_scale();
+        void set_exposure(float exposure);
 
     private:
         float depth_scaling_factor;

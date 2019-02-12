@@ -9,6 +9,7 @@ using namespace cv;
 int main () {
     // Open a new realsense camera
     auto camera = RealSenseBGRDFrameSource(Size(1920, 1080), 30);
+    camera.set_exposure(100.0);
 
     // Create a new histogram using the aforementioned distances
     auto histogram = Histogram<unsigned short>(100, 4000);
@@ -34,7 +35,7 @@ int main () {
 
         // Take a percentile from the histogram
         float sample = 
-            (float)histogram.take_percentile(0.1) 
+            (float)histogram.take_percentile(0.5) 
             * camera.get_depth_scale();
     }
 }

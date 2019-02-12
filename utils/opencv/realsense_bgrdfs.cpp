@@ -15,6 +15,16 @@ RealSenseBGRDFrameSource::RealSenseBGRDFrameSource(cv::Size size, int fps) : ali
 	}
 }
 
+void RealSenseBGRDFrameSource::set_exposure(float exposure) {
+	rs2::device dev = pipe.get_active_profile().get_device();
+	for (rs2::sensor &sensor : dev.query_sensors()) {
+        if (sensor.get_stream_profiles()[0].stream_type() == RS2_STREAM_COLOR) {
+            sensor.set_option(RS2_OPTION_AUTO_EXPOSURE_MODE, 0);
+            sensor.set_option(RS2_OPTION_EXPOSURE, exposure);
+        }
+	}
+}
+
 BGRDFrame RealSenseBGRDFrameSource::next() {
     //TODO: Minimize allocations?
     auto output_frame = BGRDFrame(cv::Mat(image_size, CV_8UC3), cv::Mat(image_size, CV_16UC1));

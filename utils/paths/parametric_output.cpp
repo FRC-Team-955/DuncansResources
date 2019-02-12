@@ -6,7 +6,7 @@ float ParametricOutput::velocity_magnitude_derivative_xy () {
 
 float ParametricOutput::direction_xy () {
 	return std::atan2(velocity.y, velocity.x);
-};
+}
 
 float ParametricOutput::sum_derivative_squares_xy () {
 	return velocity.dot(velocity);
