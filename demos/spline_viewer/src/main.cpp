@@ -14,6 +14,9 @@ int main() {
     // Set up OpenGL
     GLFWwindow* window = boilerplate();
 
+    // Set the screen view (Left, Right, Bottom, Top)
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
+
     // Control points
     TinyVec::Vec2 a(0.0, 0.0);
     TinyVec::Vec2 b(0.9, -0.6);

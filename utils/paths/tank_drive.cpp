@@ -45,11 +45,8 @@ float TankDrive::evaluate(ParametricOutput parametric,
 	// Robot heading
 	output.robot_direction = parametric.direction_xy();
 
-	// We are turning too hard, one side will have to reverse
-	// Determined by the normal of each wheel's trajectory not being within 90
-	// degrees of the trajectory of the robot center (It's reversing)
-	float direction_left = atan2(chage_pos_left.y, chage_pos_left.x);
-	float direction_right = atan2(chage_pos_right.y, chage_pos_right.x);
+	// Check whether each wheel is travelling in a different direction from the
+    // center of the robot. If so, reverse the wheel.
 	if (parametric.velocity.dot(chage_pos_left) < 0)
 		output.motion.velocity_left *= -1.0;
 

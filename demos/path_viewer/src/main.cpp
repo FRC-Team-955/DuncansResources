@@ -17,6 +17,9 @@ int main() {
     // Set up OpenGL
     GLFWwindow* window = boilerplate();
 
+    // Set the screen view (Left, Right, Bottom, Top)
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
+
     // Robot settings
     const float max_velocity = 0.5;
     const float time_interval = 0.02;
