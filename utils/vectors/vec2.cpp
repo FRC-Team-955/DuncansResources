@@ -12,5 +12,6 @@ Vec2 Vec2::operator/(float scalar) { return Vec2(x / scalar, y / scalar); }
 float Vec2::dot(Vec2 other) { return (other.x * this->x) + (other.y * this->y); }
 float Vec2::magnitude() { return sqrt(this->dot(*this)); }
 float Vec2::distance(Vec2 other) { return (*this - other).magnitude(); }
+float Vec2::normalized() { return *this / this->magnitude(); }
 Vec2 TinyVec::operator*(float lhs, Vec2 rhs) { return rhs * lhs; }
 Vec2 TinyVec::operator+(float lhs, Vec2 rhs) { return rhs + lhs; }

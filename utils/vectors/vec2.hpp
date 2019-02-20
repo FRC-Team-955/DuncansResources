@@ -15,6 +15,7 @@ namespace TinyVec {
             float dot(Vec2 other);
             float magnitude();
             float distance(Vec2 other);
+            Vec2 normalized();
     };
 
     Vec2 operator*(float lhs, Vec2 rhs);
