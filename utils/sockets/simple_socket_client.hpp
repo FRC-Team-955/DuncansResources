@@ -15,7 +15,7 @@ class SimpleSocketClient : public SimpleSocket {
         int tmp_fd = -1;
 
         // See simple_socket.*pp
-        bool keep_alive();
+        void re_establish();
 
 	private:
         // Information about a remote host (server)

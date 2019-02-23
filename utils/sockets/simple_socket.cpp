@@ -2,6 +2,9 @@
 
 // Read n_bytes from the socket into the location pointed to by `data`
 ssize_t SimpleSocket::read(void* data, size_t n_bytes) {
+    // If the socket is not open, return with no data 
+    if (!is_open()) return 0; 
+
     // Make sure that the errno variable is reset and does not contain old data.
     errno = -1;
 
@@ -13,6 +16,9 @@ ssize_t SimpleSocket::read(void* data, size_t n_bytes) {
 
 // Write n_bytes into the socket from the location pointed to by `data`
 ssize_t SimpleSocket::write(void* data, size_t n_bytes) {
+    // If the socket is not open, return with no data 
+    if (!is_open()) return 0; 
+
     // Make sure that the errno variable is reset and does not contain old data.
     errno = -1;
 

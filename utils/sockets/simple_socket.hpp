@@ -30,10 +30,8 @@ class SimpleSocket {
         // Write `data` to the socket for n_bytes length. Returns 0 if there were no bytes written.
         ssize_t write(void* data, size_t n_bytes);
 
-        // Keep the derived class alive. In order to maintain an open connection, 
-        // this should be called regularly. Returns whether the socket is actually
-        // alive or not, after attempting to reconnect if there has been an error/disconnection.
-        virtual bool keep_alive() = 0;
+        // If the socket has disconnected, try to open a new connection.
+        virtual void re_establish() = 0;
 
         // Base clase destructor. Called when derived classes are destructed.
         ~SimpleSocket();
