@@ -28,7 +28,9 @@ int main (int argc, char** argv) {
     // Buffer for incomming messages, instantiated with zeroes by using `= {0};`
     char buffer[message_buffer_size] = {0};
 
-    while (1) {
+    // Main loop
+    while (true) {
+
         // Attempt to keep the socket alive, and check status while doing so.
         bool alive = sock->keep_alive();
 
@@ -54,4 +56,7 @@ int main (int argc, char** argv) {
             usleep(1000 * 10); // In microseconds, so this sleeps for 10 milliseconds.
         }
     }
+
+    // Deconstruct the socket
+    delete sock;
 }

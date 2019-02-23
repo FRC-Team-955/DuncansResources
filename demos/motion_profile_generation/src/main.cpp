@@ -1,4 +1,4 @@
-#include <parametric_output.hpp>
+#include <motion_state.hpp>
 #include <spline.hpp>
 #include <spline_parametric.hpp>
 #include <stdio.h>
@@ -15,12 +15,13 @@ int main()
     TinyVec::Vec2 d(-0.6, -0.7);
 
     while (index < 1.0) {
-        ParametricOutput parametric = spline_parametric(a, b, c, d, index);
+        MotionState parametric = spline_parametric(a, b, c, d, index);
         TankDrive::TankOutput output;
-        index += TankDrive::evaluate(parametric, output, 0.5, 0.05, 0.02);
+        TankDrive::evaluate(parametric, output, 0.5, 0.05, 0.02);
+        index += output.change_in_index;
         printf("%f: %4f %4f\n",
                 index,
-                output.motion.velocity_left,
-                output.motion.velocity_right);
+                output.left_wheel_velocity,
+                output.right_wheel_velocity);
     }
 }

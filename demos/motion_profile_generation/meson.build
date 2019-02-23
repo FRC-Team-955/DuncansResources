@@ -1,14 +1,11 @@
-project('path_viewer', 'cpp')
+project('motion_generation', 'cpp')
 
 sources = [
+    'src/main.cpp',
     'src/spline.cpp',
-    'src/growable_float_buffer.cpp',
     'src/spline_parametric.cpp',
     'src/tank_drive.cpp',
-    'src/load_shader.cpp',
-    'src/main.cpp',
     'src/vec2.cpp',
-    'src/primitive_renderer.cpp'
 ]
 
 include_dir = include_directories('inc')
@@ -20,7 +17,7 @@ dependencies = [
 ]
 
 executable(
-    'path_viewer', 
+    'motion_generation', 
     sources, 
     dependencies : dependencies,
     include_directories : include_dir)

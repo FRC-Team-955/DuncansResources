@@ -16,4 +16,5 @@ struct BGRDFrame {
 class BGRDFrameSource {
     public: 
         virtual BGRDFrame next() = 0;
+        virtual ~BGRDFrameSource();
 };

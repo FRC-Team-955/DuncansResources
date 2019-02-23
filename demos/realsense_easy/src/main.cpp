@@ -8,7 +8,7 @@ using namespace cv;
 
 int main () {
     // Open a new realsense camera
-    auto camera = RealSenseBGRDFrameSource(Size(1920, 1080), 30);
+    auto camera = RealSenseBGRDFrameSource(Size(1280, 720), 30);
     camera.set_exposure(100.0);
 
     // Create a new histogram using the aforementioned distances
@@ -22,6 +22,9 @@ int main () {
         // Show the frame in color and depth on screen
         imshow("Depth", frameset.depth);
         imshow("Color", frameset.bgr);
+        waitKey(1);
+
+        /*
 
         // Create an ROI with which to sample the depth
         auto roi = Rect(0, 0, 50, 50);
@@ -37,5 +40,6 @@ int main () {
         float sample = 
             (float)histogram.take_percentile(0.5) 
             * camera.get_depth_scale();
+        */
     }
 }

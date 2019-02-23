@@ -7,6 +7,8 @@
 #include <primitive_renderer.hpp>
 #include <spline.hpp>
 
+using namespace TinyVec;
+
 // Forward declare the boilerplate function (defined futher down)
 GLFWwindow* boilerplate();
 
@@ -18,10 +20,10 @@ int main() {
     gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
 
     // Control points
-    TinyVec::Vec2 a(0.0, 0.0);
-    TinyVec::Vec2 b(0.9, -0.6);
-    TinyVec::Vec2 c(-0.8, 0.6);
-    TinyVec::Vec2 d(-0.6, -0.7);
+    Vec2 a(0.0, 0.0);
+    Vec2 b(0.9, -0.6);
+    Vec2 c(-0.8, 0.6);
+    Vec2 d(-0.6, -0.7);
 
     // Point renderer object, manages rendering of points
     PrimitiveRenderer points(GL_POINTS);
@@ -54,12 +56,12 @@ int main() {
         lines.clear(); // Clear the line buffer
 
         // Store the last line vertex so it can start the next line
-        TinyVec::Vec2 last; 
+        Vec2 last; 
 
         // Iterate over the spline
         for (float i = 0.0; i < 1.0; i += 0.01) {
             // Calculate vertex position for the spline
-            TinyVec::Vec2 current = spline(a, b, c, d, i); 
+            Vec2 current = spline(a, b, c, d, i); 
 
             // Add the line vertices
             lines.push(

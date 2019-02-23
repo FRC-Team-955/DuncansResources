@@ -1,66 +1,72 @@
 #include <tank_drive.hpp>
 
-void TankDrive::evaluate(MotionState current_state,
-		TankDrive::TankOutput &output, float max_velocity,
-		float dt, float wheel_distance) {
+namespace TankDrive {
+    void evaluate(MotionState motion_path,
+            TankOutput& output,
+            float max_velocity,
+            float time_delta,
+            float wheel_distance) {
+        // Position = center + (perpendicular vector * d)
+        output.left_wheel_position =
+            motion_path.position -
+            (perpendicular_to(motion_path.velocity).normalized() * wheel_distance);
 
-	// Position = center + (perpendicular vector * d)
-	output.left_position =
-	current_state.position - 
-    (perpendicular_to(current_state.velocity).normalized() * d);
+        output.right_wheel_position =
+            motion_path.position +
+            (perpendicular_to(motion_path.velocity).normalized() * wheel_distance);
 
-	output.rightt_position =
-	current_state.position + 
-    (perpendicular_to(current_state.velocity).normalized() * d);
+        // How far in position we expect to go over change_in_index
+        Vec2 chage_pos_left =
+            (motion_path.velocity) -
+            (wheel_distance * perpendicular_unit_vector_derivative(
+            motion_path.velocity, motion_path.acceleration));
 
-	// How far in position we expect to go over dj
-	Vec2 chage_pos_left =
-		(current_state.velocity) -
-		(wheel_distance * perpendicular_unit_vector_derivative(current_state.velocity, current_state.acceleration));
+        Vec2 chage_pos_right =
+            (motion_path.velocity) +
+            (wheel_distance * perpendicular_unit_vector_derivative(
+            motion_path.velocity, motion_path.acceleration));
 
-	Vec2 chage_pos_left =
-		(current_state.velocity) +
-		(wheel_distance * perpendicular_unit_vector_derivative(current_state.velocity, current_state.acceleration));
+        // Magnitude of change in position of the above over change_in_index
+        float dp_dj_left = chage_pos_left.magnitude();
+        float dp_dj_right = chage_pos_right.magnitude();
 
-	// Magnitude of change in position of the above over dj
-	float dp_dj_left = chage_pos_left.magnitude();
-	float dp_dj_right = chage_pos_right.magnitude();
+        // Find largest change_in_index for the time step (fastest moving wheel)
+        float largest_dp_dj = std::max(dp_dj_left, dp_dj_right);
+        float max_dp = max_velocity * time_delta;
+        float change_in_index = (max_dp / largest_dp_dj);
 
-	// Find dj for the time step
-	float largest_dp_dj = std::max(dp_dj_left, dp_dj_right);
-	float max_dp = max_velocity * dt;
-	float dj = (max_dp / largest_dp_dj);
+        // Distances travelled per time_delta
+        float dp_left = (change_in_index * dp_dj_left);
+        float dp_right = (change_in_index * dp_dj_right);
 
-	// Distances travelled per dt
-	float dp_left = (dj * dp_dj_left);
-	float dp_right = (dj * dp_dj_right);
+        // Assign velocities
+        output.left_wheel_velocity = dp_left / time_delta;
+        output.right_wheel_velocity = dp_right / time_delta;
 
-	// Assign velocities
-	output.left_wheel_velocity = dp_left / dt;
-	output.right_wheel_velocity = dp_right / dt;
+        // Check whether each wheel is travelling in a different direction from the
+        // center of the robot. If so, reverse the wheel.
+        if (motion_path.velocity.dot(chage_pos_left) < 0)
+            output.left_wheel_velocity *= -1.0;
 
-	// Check whether each wheel is travelling in a different direction from the
-    // center of the robot. If so, reverse the wheel.
-	if (current_state.velocity.dot(chage_pos_left) < 0)
-		output.motion.velocity_left *= -1.0;
+        if (motion_path.velocity.dot(chage_pos_right) < 0)
+            output.right_wheel_velocity *= -1.0;
 
-	if (current_state.velocity.dot(chage_pos_right) < 0)
-		output.motion.velocity_right *= -1.0;
+        // Export change in index
+        output.change_in_index = change_in_index;
+    }
 
-	// How far along the spline we advanced
-	return dj;
-}
+    float velocity_magnitude_derivative(Vec2 velocity, Vec2 acceleration) {
+        return acceleration.dot(velocity) / velocity.magnitude();
+    }
 
-float TankDrive::velocity_magnitude_derivative (Vec2 velocity) {
-	return acceleration.dot(velocity) / velocity.magnitude();
-}
+    Vec2 perpendicular_unit_vector_derivative(Vec2 velocity, Vec2 acceleration) {
+        return ((perpendicular_to(acceleration)) * velocity.magnitude() -
+                (perpendicular_to(velocity)) *
+                velocity_magnitude_derivative(velocity, acceleration)) /
+            velocity.dot(velocity);
+    }
 
-Vec2 TankDrive::perpendicular_unit_vector_derivative (Vec2 velocity, Vec2 acceleration) {
-	return ((perpendicular_to(acceleration)) * velocity.magnitude() -
-			(perpendicular_to(velocity)) * velocity_magnitude_derivative())
-		/ velocity.dot(velocity);
-}
-
-Vec2 TankDrive::perpendicular_to(Vec2 input) {
-	return Vec2(-input.y, input.x);
-}
+    Vec2 perpendicular_to(Vec2 input) {
+        return Vec2(-input.y, input.x);
+    }
+}  // namespace TankDrive

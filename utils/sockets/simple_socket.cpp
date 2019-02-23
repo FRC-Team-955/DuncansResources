@@ -67,7 +67,7 @@ bool SimpleSocket::is_open() {
     return fd >= 0;
 }
 
-// Close the socket on deconstruction/out of scope
+// Close when deconstructed
 SimpleSocket::~SimpleSocket() {
     close();
 }

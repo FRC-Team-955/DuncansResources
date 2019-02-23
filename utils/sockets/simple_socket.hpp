@@ -35,8 +35,8 @@ class SimpleSocket {
         // alive or not, after attempting to reconnect if there has been an error/disconnection.
         virtual bool keep_alive() = 0;
 
-        // Base clase destructor. Called when derived classes are destructed.
-        ~SimpleSocket();
+        // Destructor
+        virtual ~SimpleSocket();
 
     private:
         // Internal function to determine if the socket is currently open

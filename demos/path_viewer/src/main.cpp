@@ -2,13 +2,13 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <vec2.hpp>
-#include <vector>
+#include <motion_state.hpp>
 #include <primitive_renderer.hpp>
 #include <spline.hpp>
 #include <spline_parametric.hpp>
-#include <parametric_output.hpp>
 #include <tank_drive.hpp>
+#include <vec2.hpp>
+#include <vector>
 
 // Forward declare the boilerplate function (defined futher down)
 GLFWwindow* boilerplate();
@@ -33,13 +33,13 @@ int main() {
 
     // Point renderer object, manages rendering of points
     PrimitiveRenderer points(GL_POINTS);
-    glPointSize(5); // Set the OpenGL points size to something we can see
+    glPointSize(5);  // Set the OpenGL points size to something we can see
 
     // Line renderer, manages rendering of lines_center
     PrimitiveRenderer lines_center(GL_LINES);
     PrimitiveRenderer lines_left(GL_LINES);
     PrimitiveRenderer lines_right(GL_LINES);
-    glLineWidth(2); // Sane line width
+    glLineWidth(2);  // Sane line width
 
     // Animation variable
     float increment = 0.0;
@@ -53,13 +53,13 @@ int main() {
         b.x = cos(increment);
         b.y = sin(increment);
 
-        points.clear(); // Clear previous entries
+        points.clear();  // Clear previous entries
         // Add all of the control points to the current buffer
-        points.push(GraphicPoint { a, 1.0, 1.0, 1.0 });
-        points.push(GraphicPoint { b, 1.0, 1.0, 1.0 });
-        points.push(GraphicPoint { c, 1.0, 1.0, 1.0 });
-        points.push(GraphicPoint { d, 1.0, 1.0, 1.0 });
-        points.commit(); // Push new entries to the GPU
+        points.push(GraphicPoint{a, 1.0, 1.0, 1.0});
+        points.push(GraphicPoint{b, 1.0, 1.0, 1.0});
+        points.push(GraphicPoint{c, 1.0, 1.0, 1.0});
+        points.push(GraphicPoint{d, 1.0, 1.0, 1.0});
+        points.commit();  // Push new entries to the GPU
 
         // Clear the line buffers
         lines_center.clear();
@@ -67,46 +67,54 @@ int main() {
         lines_right.clear();
 
         // Store the last line vertex so it can start the next line
-        TinyVec::Vec2 last_center; 
-        TinyVec::Vec2 last_left; 
-        TinyVec::Vec2 last_right; 
+        TinyVec::Vec2 last_center;
+        TinyVec::Vec2 last_left;
+        TinyVec::Vec2 last_right;
 
         // Iterate over the spline
         float index = 0.0;
         while (index < 1.0) {
             // Calculate vertex position for the spline
-            ParametricOutput parametric = spline_parametric(a, b, c, d, index);
+            MotionState parametric = spline_parametric(a, b, c, d, index);
             TankDrive::TankOutput output;
-            index += TankDrive::evaluate(parametric, output, max_velocity, time_interval, wheel_distance);
+            TankDrive::evaluate(parametric, output, max_velocity, time_interval,
+                    wheel_distance);
+            index += output.change_in_index;
 
             // Add the line vertices
-            lines_center.push(GraphicLine { 
-                    GraphicPoint {output.center_position, 1.0, 1.0, 1.0}, 
-                    GraphicPoint {last_center, 1.0, 1.0, 1.0}, 
+            lines_center.push(GraphicLine{
+                    GraphicPoint{parametric.position, 1.0, 1.0, 1.0},
+                    GraphicPoint{last_center, 1.0, 1.0, 1.0},
                     });
 
             // Coloring
-            float left_velocity_frac = fabs(output.motion.velocity_left / max_velocity);
-            float right_velocity_frac = fabs(output.motion.velocity_right / max_velocity);
-            float r_left = output.motion.velocity_left < 0.0 ? left_velocity_frac : 0.0;
-            float r_right = output.motion.velocity_right < 0.0 ? right_velocity_frac : 0.0;
-            float g_left = output.motion.velocity_left < 0.0 ? 0.0 : left_velocity_frac;
-            float g_right = output.motion.velocity_right < 0.0 ? 0.0 : right_velocity_frac;
+            float left_velocity_frac =
+                fabs(output.left_wheel_velocity / max_velocity);
+            float right_velocity_frac =
+                fabs(output.right_wheel_velocity / max_velocity);
+            float r_left =
+                output.left_wheel_velocity < 0.0 ? left_velocity_frac : 0.0;
+            float r_right =
+                output.right_wheel_velocity < 0.0 ? right_velocity_frac : 0.0;
+            float g_left =
+                output.left_wheel_velocity < 0.0 ? 0.0 : left_velocity_frac;
+            float g_right =
+                output.right_wheel_velocity < 0.0 ? 0.0 : right_velocity_frac;
 
-            lines_left.push(GraphicLine { 
-                    GraphicPoint {output.left_position, r_left, g_left, 0.0}, 
-                    GraphicPoint {last_left, r_left, g_left, 0.0}, 
+            lines_left.push(GraphicLine{
+                    GraphicPoint{output.left_wheel_position, r_left, g_left, 0.0},
+                    GraphicPoint{last_left, r_left, g_left, 0.0},
                     });
 
-            lines_right.push(GraphicLine { 
-                    GraphicPoint {output.right_position, r_right, g_right, 0.0}, 
-                    GraphicPoint {last_right, r_right, g_right, 0.0}, 
+            lines_right.push(GraphicLine{
+                    GraphicPoint{output.right_wheel_position, r_right, g_right, 0.0},
+                    GraphicPoint{last_right, r_right, g_right, 0.0},
                     });
 
             // Remember where we were this time so we can start there on the next
-            last_center = output.center_position;
-            last_left = output.left_position;
-            last_right = output.right_position;
+            last_center = parametric.position;
+            last_left = output.left_wheel_position;
+            last_right = output.right_wheel_position;
         }
         // Commit changes to the GPU
         lines_center.commit();
@@ -122,7 +130,7 @@ int main() {
         // Show what we rendered on screen
         glfwSwapBuffers(window);
 
-        // Poll 
+        // Poll
         glfwPollEvents();
     }
 
@@ -131,7 +139,7 @@ int main() {
 }
 
 // GLFW error callback (function). Prints messages from GLFW
-void glfw_error_callback(int error, const char *description) {
+void glfw_error_callback(int error, const char* description) {
     fprintf(stderr, "GLFW Error: %s\n", description);
 }
 
@@ -143,7 +151,6 @@ void glfw_window_resize_callback(GLFWwindow* window, int width, int height) {
 
 // Set up OpenGL, etc.
 GLFWwindow* boilerplate() {
-
     // Try to initialize GLFW
     if (!glfwInit()) {
         // Initialization failed. Message and shut down.
@@ -155,13 +162,14 @@ GLFWwindow* boilerplate() {
     glfwSetErrorCallback(glfw_error_callback);
 
     // Set up window parameters
-    glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+    glfwWindowHint(GLFW_SAMPLES, 4);                // 4x antialiasing
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);  // We want OpenGL 3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
+    glfwWindowHint(GLFW_OPENGL_PROFILE,
+            GLFW_OPENGL_CORE_PROFILE);  // We don't want the old OpenGL
 
     // Create a window for OpenGL to draw upon
-    GLFWwindow *window = glfwCreateWindow(640, 480, "Spline viewer", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(640, 480, "Spline viewer", NULL, NULL);
     if (!window) {
         // Window or OpenGL context creation failed
         fprintf(stderr, "GLFW Failed to create a window.\n");

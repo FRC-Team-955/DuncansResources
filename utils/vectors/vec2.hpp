@@ -20,4 +20,4 @@ namespace TinyVec {
 
     Vec2 operator*(float lhs, Vec2 rhs);
     Vec2 operator+(float lhs, Vec2 rhs);
-}
+}  // namespace TinyVec

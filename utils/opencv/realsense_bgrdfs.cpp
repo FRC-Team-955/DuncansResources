@@ -1,6 +1,6 @@
 #include <realsense_bgrdfs.hpp>
 
-RealSenseBGRDFrameSource::RealSenseBGRDFrameSource(cv::Size size, int fps) : align(RS2_STREAM_COLOR), image_size(size) {
+RealSenseBGRDFrameSource::RealSenseBGRDFrameSource(cv::Size size, int fps) : image_size(size), align(RS2_STREAM_COLOR) {
 	rs2::config cfg;
 	cfg.enable_stream(RS2_STREAM_DEPTH, size.width, size.height, RS2_FORMAT_Z16, fps);
 	cfg.enable_stream(RS2_STREAM_COLOR, size.width, size.height, RS2_FORMAT_BGR8, fps);
@@ -19,7 +19,6 @@ void RealSenseBGRDFrameSource::set_exposure(float exposure) {
 	rs2::device dev = pipe.get_active_profile().get_device();
 	for (rs2::sensor &sensor : dev.query_sensors()) {
         if (sensor.get_stream_profiles()[0].stream_type() == RS2_STREAM_COLOR) {
-            sensor.set_option(RS2_OPTION_AUTO_EXPOSURE_MODE, 0);
             sensor.set_option(RS2_OPTION_EXPOSURE, exposure);
         }
 	}

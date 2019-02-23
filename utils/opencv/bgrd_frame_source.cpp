@@ -10,3 +10,5 @@ BGRDFrame BGRDFrame::reduce_width(int n_pix) {
     cv::Rect new_roi (n_pix, 0, this->bgr.cols - (n_pix * 2), this->bgr.rows);
     return (*this)(new_roi);
 }
+
+BGRDFrameSource::~BGRDFrameSource() {}
