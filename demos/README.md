@@ -11,7 +11,7 @@
 # Installing libraries
 ```
 sudo apt update
-sudo apt install cmake libglew-dev libglfw3-dev
+sudo apt install libglew-dev libglfw3-dev meson ninja
 ```
 
 Optional: [Install OpenCV](https://docs.opencv.org/3.4/d7/d9f/tutorial_linux_install.html)
@@ -22,16 +22,12 @@ To compile and run these examples, execute the following commands:
 ```
 cd <project directory>
 
-# Create a build directory
-mkdir build
+# Create a build directory and cd into it
+meson build
 cd build
 
-# Tell cmake to generate build files from CMakeLists.txt that MAKE can read and compile with
-cmake ..
-
-# Execute the make command to compile the source using the build files
-# Note, '-j' enables make to compile using multiple threads. On large projects, this is extremely helpful.
-make -j
+# Run the compiler
+ninja
 
 # Run the executable
 ./<executable name>
