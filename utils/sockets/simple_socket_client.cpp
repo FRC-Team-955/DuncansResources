@@ -7,12 +7,12 @@ SimpleSocketClient::SimpleSocketClient(std::string ip, int port) {
     this->ip = ip;
 
     // Try to connect immediately
-    keep_alive();
+    re_establish();
 }
 
-bool SimpleSocketClient::keep_alive() {
+void SimpleSocketClient::re_establish() {
     // If it ain't broke, don't fix it
-    if (is_open()) return true;
+    if (is_open()) return;
 
     // We haven't assigned the temporary file descriptor either
     if (tmp_fd < 0) {
@@ -66,19 +66,16 @@ bool SimpleSocketClient::keep_alive() {
             }
 
             // We're still not connected.
-            return false;
+            return;
         } else {
             // Assign the real file descriptor, which opens the connection for use!
             this->fd = tmp_fd;
 
             // Invalidate the temporary fd, we don't need it anymore.
             tmp_fd = -1;
-            return true;
+            return;
         }
     }
-    
-    // Something happened, but we're still not ready.
-    return false;
 }
 
 SimpleSocketClient::~SimpleSocketClient() {

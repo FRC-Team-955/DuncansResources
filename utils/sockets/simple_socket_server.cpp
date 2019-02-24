@@ -45,18 +45,18 @@ SimpleSocketServer::SimpleSocketServer(int port) {
     set_socket_nonblock(server_fd);
 
     // Attempt to find and connect to a client immediately.
-    keep_alive();
+    re_establish();
 }
 
 // If the client has disconnected, check for a new connection. Otherwise, return
 // true. Can be called faily often as it does not block, and makes no kernel
 // calls when the socket is already open.
-bool SimpleSocketServer::keep_alive() {
+void SimpleSocketServer::re_establish() {
     // If we already have an open socket, do nothing.
-    if (is_open()) return true;
+    if (is_open()) return;
 
     // Attempt to handle a new client, and store the file descriptor 
-    // in a temporary location
+    // in a temporary location.
     int tmp_fd = accept(server_fd, (struct sockaddr *) &cli_addr, &clilen);
 
     // Determine whether there has been an error
@@ -64,11 +64,11 @@ bool SimpleSocketServer::keep_alive() {
         if (errno != EWOULDBLOCK) {
             // There has been a real error, halt and report.
             throw std::runtime_error(strerror(errno));
-            return false;
+            return;
         }
 
         // The server cannot accept a new client because there are none trying to connect. Move on.
-        return false;
+        return;
     } else {
         // A new client has connected! Assign the fd field of the base class, and set the socket to non-blocking.
         this->fd = tmp_fd;
@@ -77,7 +77,7 @@ bool SimpleSocketServer::keep_alive() {
         }
 
         // Green across the board. We now have a working socket. Hopefully.
-        return true;
+        return;
     }
 }
 

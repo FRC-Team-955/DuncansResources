@@ -10,8 +10,8 @@ class SimpleSocketServer : public SimpleSocket {
         // Destructor
 		~SimpleSocketServer();
 
-        // See simple_socket.hpp
-        bool keep_alive();
+        // See simple_socket.*pp
+        void re_establish();
 	private:
         // Server file descriptor, not to be confused with the client's.
         // See socket(..) in simple_socket_server.cpp
