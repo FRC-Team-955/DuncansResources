@@ -3,23 +3,24 @@
 #include <simple_socket.hpp>
 
 class SimpleSocketServer : public SimpleSocket {
-	public:
+    public:
         // Constructor
-		SimpleSocketServer (int port);
-        
+        SimpleSocketServer(int port);
+
         // Destructor
-		~SimpleSocketServer();
+        ~SimpleSocketServer();
 
         // See simple_socket.*pp
         void re_establish();
-	private:
+
+    private:
         // Server file descriptor, not to be confused with the client's.
         // See socket(..) in simple_socket_server.cpp
-		int server_fd; 
+        int server_fd;
 
         // Client address struct length, relevent in accept(...)
-		socklen_t clilen; 
+        socklen_t clilen;
 
-        //Client address struct
-		struct sockaddr_in cli_addr; 
+        // Client address struct
+        struct sockaddr_in cli_addr;
 };

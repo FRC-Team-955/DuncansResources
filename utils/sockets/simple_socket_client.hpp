@@ -3,9 +3,9 @@
 #include <simple_socket.hpp>
 
 class SimpleSocketClient : public SimpleSocket {
-	public:
+    public:
         // Constructor
-		SimpleSocketClient (std::string ip, int port);
+        SimpleSocketClient(std::string ip, int port);
 
         // Destructor
         ~SimpleSocketClient();
@@ -17,9 +17,9 @@ class SimpleSocketClient : public SimpleSocket {
         // See simple_socket.*pp
         void re_establish();
 
-	private:
+    private:
         // Information about a remote host (server)
-		struct hostent *server_host = nullptr;
+        struct hostent* server_host = nullptr;
 
         // Store the ip so we can reconnect later
         std::string ip;
