@@ -34,7 +34,7 @@ class SimpleSocket {
         virtual void re_establish() = 0;
 
         // Base clase destructor. Called when derived classes are destructed.
-        ~SimpleSocket();
+        virtual ~SimpleSocket();
 
     private:
         // Internal function to determine if the socket is currently open

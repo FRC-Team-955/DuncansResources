@@ -18,7 +18,10 @@ int main (int argc, char** argv) {
 
         // If the socket is alive, write "hello" into it. If the server 
         // is started first, they will echo this back to one another forever.
-        if (sock->keep_alive()) sock->write((void*)"hello", 6);
+        while (sock->write((void*)"hello", 6) == 0) {
+            usleep(1000 * 10);
+            sock->re_establish();
+        }
     } else {
 
         // Create a new socket server on port 5060
@@ -28,18 +31,11 @@ int main (int argc, char** argv) {
     // Buffer for incomming messages, instantiated with zeroes by using `= {0};`
     char buffer[message_buffer_size] = {0};
 
-    // Main loop
     while (true) {
-
-        // Attempt to keep the socket alive, and check status while doing so.
-        bool alive = sock->keep_alive();
-
-        // Return value from the socket. Will be equal to the 
-        // number of bytes read or written if not zero.
-        ssize_t ret = 0;
-
-        // Check if the socket is alive, and if so, read up to 512 bytes into the message buffer
-        if (alive && (ret = sock->read(buffer, message_buffer_size))) {
+        
+        // Attempt to read up to <message_buffer_size> bytes into the message buffer
+        ssize_t ret = sock->read(buffer, message_buffer_size);
+        if (ret > 0) {
             // If there was anything received...
 
             // Print the message buffer contents
@@ -52,11 +48,9 @@ int main (int argc, char** argv) {
             // Clear (zero) the buffer to await new messages
             bzero(buffer, 512);
         } else {
-            // Nothing was received. Sleep so we don't spam the kernel.
+            // Nothing was received. Try to re-establish  Sleep so we don't spam the kernel.
+            sock->re_establish();
             usleep(1000 * 10); // In microseconds, so this sleeps for 10 milliseconds.
         }
     }
-
-    // Deconstruct the socket
-    delete sock;
 }
