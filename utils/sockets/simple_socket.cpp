@@ -30,8 +30,11 @@ ssize_t SimpleSocket::write(void* data, size_t n_bytes) {
 // Decide what to do, given a socket return value
 ssize_t SimpleSocket::close_if_error(ssize_t socket_return_value) {
 
+    // Close when we read zero bytes; indicates the endpoint hung up.
+    if (socket_return_value == 0) close();
+
     // If there's a socket error, handle it
-    if (socket_return_value <= 0) {
+    if (socket_return_value < 0) {
 
         // If errno = EWOULDBLOCK, the socket is fine, it just hasn't received 
         // anything yet. Otherwise, close the socket down.

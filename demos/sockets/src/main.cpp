@@ -22,7 +22,6 @@ int main (int argc, char** argv) {
         while (true) {
             printf("Enter a character (%i): ", sock->is_open());
             message = getchar();
-            sock->read((void*)"", 0);
             sock->re_establish();
             if (sock->write(&message, 1)) {
                 printf("Sucessfully wrote %c\n", message);
