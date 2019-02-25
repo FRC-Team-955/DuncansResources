@@ -22,12 +22,21 @@ Because this library is so small and custom, I did not bother turning it into a 
 
 See `src/main.cpp` for a simple example of using the sockets. Note how I use the base class `SimpleSocket` to represent the socket after I create it with either `SimpleSocketClient` or `SimpleSocketServer`. I recommend you do the same, in case you want to transpose which device is the socket client/server later. Keep in mind that it does not have to be allocated on the heap (`new SimpleSocket*`) like it is here, I just do that so that the type of socket is determined at runtime; this is unusual and is only for demonstration/laziness purposes.
 
+The basic pattern which you will use for both read and write is:
+```cpp
+ssize_t ret = sock->read(buffer, message_buffer_size);
+if (ret > 0) {
+    // A message was received, do something with the message.
+    // ...
+
+} else {
+    // Nothing was received. Try to re-establish the connection if it was closed on the other end.
+    sock->re_establish();
+}
+```
+
 ## Limitations
-The library is intended only to be used for asynchronous sockets. This means that in order to use the library, you have to call `sock.keep_alive()` frequently to maintain contact. You will have to build the flow of your program around this limitation. This is a marginal improvement upon the default alternative - blocking sockets - which halt your program while the socket is waiting to send or receive a message. 
-
-Furthermore, the socket server class only allows one client to connect at any given time. To handle more than one client, you would need to create more server socket classes with unique ports. This is not even close to ideal. If you want to try to handle multiple clients, look into `poll(2)`, `epoll(7)`, or `select(3)`. My favorite is `poll(2)` for it's simplicity and ease of use. Take a look at 'more guides'. 
-
-If the socket is still closed and you try to `write()` or `read()` it, it may throw an exception. Try to make sure the socket is alive (`.keep_alive()`) before a communication burst.
+The socket server class only allows one client to connect at any given time. To handle more than one client, you would need to create more server socket classes with unique ports. This is not even close to ideal. If you want to try to handle multiple clients, look into `poll(2)`, `epoll(7)`, or `select(3)`. My favorite is `poll(2)` for it's simplicity and ease of use. Take a look at 'more guides'. 
 
 ## More guides
 If you'd like to know more about sockets in general, I'd recommend Beej's networking guide:
