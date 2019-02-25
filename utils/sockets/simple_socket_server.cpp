@@ -5,6 +5,9 @@ SimpleSocketServer::SimpleSocketServer(int port) {
     // Set port
     this->port = port;
 
+    // Ignore SIGPIPE from write fail
+    signal(SIGPIPE, SIG_IGN);
+
     // Create the server socket file descriptor. This is not to be confused with 
     // the client socket file descriptor that the base class contains.
     // This socket is used to indicated when a new client has connected, and

@@ -11,6 +11,7 @@
 #include <netdb.h> // gethostbyname, etc.
 #include <errno.h> // C api error handling
 #include <fcntl.h> // Flags/non-blocking
+#include <signal.h>
 
 // A simple socket, base class for client and server objects to inherit from. 
 // Represents a socket that can be written to and read from.
@@ -36,9 +37,9 @@ class SimpleSocket {
         // Base clase destructor. Called when derived classes are destructed.
         ~SimpleSocket();
 
-    private:
         // Internal function to determine if the socket is currently open
         bool is_open();
+    private:
 
         // Internal function to forcibly close the socket
         void close();

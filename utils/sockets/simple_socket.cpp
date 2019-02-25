@@ -30,11 +30,8 @@ ssize_t SimpleSocket::write(void* data, size_t n_bytes) {
 // Decide what to do, given a socket return value
 ssize_t SimpleSocket::close_if_error(ssize_t socket_return_value) {
 
-    // 'End of file'. Peer hungup, close safely.
-    if (socket_return_value == 0) close();
-
     // If there's a socket error, handle it
-    if (socket_return_value < 0) {
+    if (socket_return_value <= 0) {
 
         // If errno = EWOULDBLOCK, the socket is fine, it just hasn't received 
         // anything yet. Otherwise, close the socket down.
@@ -43,6 +40,7 @@ ssize_t SimpleSocket::close_if_error(ssize_t socket_return_value) {
                 break; 
             case ECONNREFUSED: // Connection was refused
             case ECONNRESET: // Connection was reset
+            case EPIPE: // SIGPIPE was ignored; close the socket instead of quitting
                 close();
                 break;
             default: //Unhandled, real error.

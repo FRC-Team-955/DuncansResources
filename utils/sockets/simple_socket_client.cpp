@@ -6,6 +6,9 @@ SimpleSocketClient::SimpleSocketClient(std::string ip, int port) {
     this->port = port;
     this->ip = ip;
 
+    // Ignore SIGPIPE from write fail
+    signal(SIGPIPE, SIG_IGN);
+
     // Try to connect immediately
     re_establish();
 }
@@ -57,7 +60,10 @@ void SimpleSocketClient::re_establish() {
             switch (errno) {
                 case EWOULDBLOCK: // Still nothing to connect to on the host
                 case ECONNREFUSED: // Ditto
+                    break;
                 case EINPROGRESS: // It's already happening, just not done
+                    re_establish(); // Try again
+                    return;
                     break; // Ignore it and move on
                 default:
                     // This is a real error, halt and report it.

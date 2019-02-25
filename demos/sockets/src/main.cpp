@@ -10,47 +10,41 @@ int main (int argc, char** argv) {
     // Base class pointer. Can be either represent a client, or a server.
     SimpleSocket* sock;
 
+    bool is_client = argc > 1;
+
     // If there are any command line options, become a client
-    if (argc > 1) {
+    char message = '?';
+    if (is_client) {
 
         // Create a new client socket at ip 'localhost' on port 5060
         sock = new SimpleSocketClient ("localhost", 5060);
 
-        // If the socket is alive, write "hello" into it. If the server 
-        // is started first, they will echo this back to one another forever.
-        while (sock->write((void*)"hello", 6) == 0) {
-            usleep(1000 * 10);
+        while (true) {
+            printf("Enter a character (%i): ", sock->is_open());
+            message = getchar();
+            sock->read((void*)"", 0);
             sock->re_establish();
+            if (sock->write(&message, 1)) {
+                printf("Sucessfully wrote %c\n", message);
+            } else {
+                printf("Couldn't write (%s)\n", sock->is_open() ? "Connected" : "Disconnected");
+                usleep(1000 * 100);
+            }
         }
+        
     } else {
 
         // Create a new socket server on port 5060
         sock = new SimpleSocketServer (5060);
-    }
 
-    // Buffer for incomming messages, instantiated with zeroes by using `= {0};`
-    char buffer[message_buffer_size] = {0};
-
-    while (1) {
-        
-        // Attempt to read up to <message_buffer_size> bytes into the message buffer
-        ssize_t ret = sock->read(buffer, message_buffer_size);
-        if (ret > 0) {
-            // If there was anything received...
-
-            // Print the message buffer contents
-            printf("Message: %s\n", buffer);
-
-            // Write the message buffer contents into the socket, reusing the length of the 
-            // read message as the length for the write message
-            sock->write(buffer, ret);
-
-            // Clear (zero) the buffer to await new messages
-            bzero(buffer, 512);
-        } else {
-            // Nothing was received. Try to re-establish  Sleep so we don't spam the kernel.
+        while (true) {
             sock->re_establish();
-            usleep(1000 * 10); // In microseconds, so this sleeps for 10 milliseconds.
+            if (sock->read(&message, 1)) {
+                printf("Sucessfully read %c\n", message);
+            } else {
+                printf("Nothing to read (%s)\n", sock->is_open() ? "Connected" : "Disconnected");
+                usleep(1000 * 100);
+            }
         }
     }
 }
