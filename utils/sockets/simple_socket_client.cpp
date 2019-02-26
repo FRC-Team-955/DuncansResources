@@ -60,10 +60,8 @@ void SimpleSocketClient::re_establish() {
             switch (errno) {
                 case EWOULDBLOCK: // Still nothing to connect to on the host
                 case ECONNREFUSED: // Ditto
-                    break;
-                case EINPROGRESS: // It's already happening, just not done
-                    re_establish(); // Try again
-                    return;
+                case EINPROGRESS: // Ditto
+                case EALREADY: // Ditto
                     break; // Ignore it and move on
                 default:
                     // This is a real error, halt and report it.
