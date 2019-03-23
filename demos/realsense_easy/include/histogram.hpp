@@ -1,1 +1,1 @@
-../../../utils/opencv/histogram.hpp
+../../../utils/math/histogram.hpp
